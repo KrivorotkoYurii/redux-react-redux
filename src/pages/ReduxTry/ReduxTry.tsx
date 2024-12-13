@@ -2,15 +2,29 @@ import React, { useEffect, useReducer } from 'react';
 import styles from './ReduxTry.module.scss';
 import { DecrementAction, IncrementAction, store } from '../../store/store';
 
-export const ReduxTry: React.FC = () => {
+interface Props {
+  counterId: string;
+}
+
+export const ReduxTry: React.FC<Props> = ({ counterId }) => {
   const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   const addCash = () => {
-    store.dispatch({ type: 'increment' } satisfies IncrementAction);
+    store.dispatch({
+      type: 'increment',
+      payload: {
+        counterId,
+      },
+    } satisfies IncrementAction);
   };
 
   const getCash = () => {
-    store.dispatch({ type: 'decrement' } satisfies DecrementAction);
+    store.dispatch({
+      type: 'decrement',
+      payload: {
+        counterId,
+      },
+    } satisfies DecrementAction);
   };
 
   useEffect(() => {
@@ -32,7 +46,9 @@ export const ReduxTry: React.FC = () => {
           Take money
         </button>
       </div>
-      <p className={styles.content__infos}>{store.getState().cash}</p>
+      <p className={styles.content__infos}>
+        {store.getState().counters[counterId]?.cash}
+      </p>
     </div>
   );
 };
